@@ -1,0 +1,7 @@
+{
+    "board_url" : "nnp",
+    "board_name" : "ニュー速ノーモラル嫌儲",
+    "board_explain" : "ニュース専用の掲示板です。スレ立てにはアカウント登録が必須です。",
+    "default_name" : "名無しさん",
+    "account_required" : true
+}
