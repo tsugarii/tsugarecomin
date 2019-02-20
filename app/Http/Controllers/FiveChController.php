@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Cache;
 
@@ -68,6 +69,8 @@ class FiveChController extends Controller
 
         $thread = new thread;
         $comment = new comment;
+        
+        $user = Auth::user();
 
         $ip = $request->server('REMOTE_ADDR');
 
@@ -82,6 +85,9 @@ class FiveChController extends Controller
         if($br_count > 20) {
             return "ERROR:Too much new line!!";
         }
+
+        //トリップの処理をする。
+        $trip_key = $this->trip($form);
 
         //コマンド欄の処理をする。
         $command_str = $this->command($form,$ip);
@@ -109,7 +115,11 @@ class FiveChController extends Controller
 
             //スレッドにアカウントが必須か確認し、必要ならチェックする
             if($board_info->account_required) {
-                return "この板はスレ立てにアカウント登録が必要です。";
+                if(Auth::check()) {
+                    return "アカウントが認証されています。";
+                } else {
+                    return "この板はスレ立てにアカウント登録が必要です。";
+                }
             }
 
             //スレッドキーの生成
@@ -128,7 +138,7 @@ class FiveChController extends Controller
             $this->subject_txt_save($thread,$form);
 
             //スレッドのdatファイルに書き込み
-            $this->thread_dat_save($thread,$comment,$form,$command_str);
+            $this->thread_dat_save($thread,$comment,$form,$command_str,$trip_key);
 
             return redirect('../r/' . $form->bbs . '/' . $thread_key);
             
@@ -196,7 +206,7 @@ class FiveChController extends Controller
             $this->subject_txt_update($thread,$form,$res_count);
 
             //スレッドのdatファイルに書き込み。
-            $this->thread_dat_update($comment,$form,$command_str,$res_count);
+            $this->thread_dat_update($comment,$form,$command_str,$res_count,$trip_key);
 
             return redirect('../r/' . $form->bbs . '/' . $thread_key);
 
@@ -253,8 +263,8 @@ class FiveChController extends Controller
         $timestamp_1 = date('Y/m/d');
         $timestamp_2 = date('H:i:s');
 
-        $secret = 'seacret'; 
-        $id_hash = hash_hmac("sha1", $form->bbs.$timestamp_1. substr($ip, 0, 8), $secret);
+        $secret = 'secret'; 
+        $id_hash = hash_hmac("sha1", $form->bbs . $timestamp_1 . substr($ip, 0, 8), $secret);
         $id_base64 = base64_encode($id_hash);
         $id =  substr($id_base64, 0, 8);
 
@@ -318,23 +328,41 @@ class FiveChController extends Controller
         fclose($handle);
     }
 
-    private function thread_dat_save($thread,$comment,$form,$command_str) {
+    private function thread_dat_save($thread,$comment,$form,$command_str,$trip_key) {
         $path = public_path();
         $handle = fopen($path.'/'. $form->bbs . '/dat/'. $thread->time . '.dat', 'w');
 
-        $string_res = $form->FROM . $command_str . '<><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . $form->subject . "\n";
+        if($command_str != '' && $trip_key != '') {
+            $string_res = $form->FROM . '</b>◆' . $trip_key . ' (' . $command_str . ') <b> <><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . $form->subject . "\n";
+        } else if($command_str != '' && $trip_key == '') {
+            $string_res = $form->FROM . '</b> (' . $command_str . ') <b> <><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . $form->subject . "\n";
+        } else if($command_str == '' && $trip_key != '') {
+            $string_res = $form->FROM . '</b>◆' . $trip_key . '<b> <><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . $form->subject . "\n";
+         } else {
+            $string_res = $form->FROM . '<><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . $form->subject . "\n";
+        }
+        
         $string_res = mb_convert_encoding($string_res, 'SJIS-win', 'utf-8');
         fwrite($handle, $string_res);
 
         fclose($handle);
     }
 
-    private function thread_dat_update($comment,$form,$command_str,$res_count) {
+    private function thread_dat_update($comment,$form,$command_str,$res_count,$trip_key) {
         $path = public_path();
 
         $handle = fopen($path.'/'. $form->bbs . '/dat/'. $form->key . '.dat', 'a');
 
-        $string_res = $form->FROM . $command_str . '<><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . "\n";
+        if($command_str != '' && $trip_key != '') {
+            $string_res = $form->FROM . '</b>◆' . $trip_key . ' (' . $command_str . ') <b> <><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . "\n";
+        } else if($command_str != '' && $trip_key == '') {
+            $string_res = $form->FROM . '</b> (' . $command_str . ') <b> <><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . "\n";
+        }else if($command_str == '' && $trip_key != '') {
+            $string_res = $form->FROM . '</b>◆' . $trip_key . '<b> <><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . "\n";
+        } else {
+            $string_res = $form->FROM . $command_str . '<><>' . $comment->time . ' ID:' . $comment->id . '<>' . $form->MESSAGE . '<>' . "\n";
+        }
+
         $string_res = mb_convert_encoding($string_res, 'SJIS-win', 'utf-8');
         fwrite($handle, $string_res);
 
@@ -359,19 +387,28 @@ class FiveChController extends Controller
         }
     }
 
+    private function trip($form) {
+
+        $form->FROM = str_replace('◆', '◇', $form->FROM);
+
+        if(preg_match('/#/', $form->FROM) == 1) {
+            $name_trip = explode('#', $form->FROM, 2);
+            $form->FROM = $name_trip[0];
+
+            return $trip_key = str_replace('+', '.', substr(base64_encode(sha1($name_trip[1], true)), 0, 12));
+        }
+
+        return '';
+    }
+
     private function command($form,$ip) {
         if($form->mail != NULL) {
             if(preg_match('/^ip$/i', $form->mail) == 1) {
-                $command_str = ' </b>(' . $ip . ')<b>';
-                $form->mail = NULL;
-
-                return $command_str;
-            } else {
-                return '';
+                return $ip;
             }
-        } else {
-            return '';
         }
+
+        return '';
     }
 
     private function escape($request) {
