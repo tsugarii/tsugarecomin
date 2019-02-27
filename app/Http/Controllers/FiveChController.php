@@ -26,6 +26,10 @@ class FiveChController extends Controller
         }
     }
 
+    public function index() {
+        return view('main');
+    }
+
     public function read_cgi_thread($board_key,$thread_key) {
         if(preg_match('/^min$|^nnp$/', $board_key) == 1) {
             if(preg_match('/^[0-9]{10}$/',$thread_key) == 1) {
@@ -62,7 +66,7 @@ class FiveChController extends Controller
         return "スレッドキーがおかしいです。";
     }
 
-    public function write(Request $request,FiveChRequest $reqest) {
+    public function write(FiveChRequest $request) {
 
         //時間帯を日本に設定
         date_default_timezone_set('Asia/Tokyo');
@@ -116,7 +120,7 @@ class FiveChController extends Controller
             //スレッドにアカウントが必須か確認し、必要ならチェックする
             if($board_info->account_required) {
                 if(Auth::check()) {
-                    return "アカウントが認証されています。";
+                    echo "アカウントが認証されています。<br />";
                 } else {
                     return "この板はスレ立てにアカウント登録が必要です。";
                 }
@@ -140,7 +144,16 @@ class FiveChController extends Controller
             //スレッドのdatファイルに書き込み
             $this->thread_dat_save($thread,$comment,$form,$command_str,$trip_key);
 
-            return redirect('../r/' . $form->bbs . '/' . $thread_key);
+            $agent = $request->server('HTTP_USER_AGENT');
+
+            if ((preg_match('/Chrome/i', $agent) === 0) &&
+                (preg_match('/Firefox/i', $agent) === 0) &&
+                (preg_match('/Safari/i', $agent) === 0))
+            {
+                return mb_convert_encoding("書き込み完了！", 'SJIS-win', 'utf-8');
+            } else {
+                return redirect('../r/' . $form->bbs . '/' . $thread_key . '/#' . $comment_key);
+            }
             
         //コメントの場合。
         }else if(!isset($form->subject) && isset($form->key)) {
@@ -208,7 +221,18 @@ class FiveChController extends Controller
             //スレッドのdatファイルに書き込み。
             $this->thread_dat_update($comment,$form,$command_str,$res_count,$trip_key);
 
-            return redirect('../r/' . $form->bbs . '/' . $thread_key);
+
+            $agent = $request->server('HTTP_USER_AGENT');
+
+            if ((preg_match('/Chrome/i', $agent) === 0) &&
+                (preg_match('/Firefox/i', $agent) === 0) &&
+                (preg_match('/Safari/i', $agent) === 0))
+            {
+                return mb_convert_encoding("書き込み完了！", 'SJIS-win', 'utf-8');
+                
+            } else {
+                return redirect('../r/' . $form->bbs . '/' . $thread_key . '/#' . $comment_key);
+            }
 
         }else {
             return "ERROR!!";
@@ -222,6 +246,11 @@ class FiveChController extends Controller
         $thread->time = time();
         $thread->created_at = time();
         $thread->updated_at = time();
+
+        if(Auth::check()) {
+            $thread->user_id = Auth::user()->user_id;
+        }
+
         $thread->save();
     }
 
@@ -263,7 +292,7 @@ class FiveChController extends Controller
         $timestamp_1 = date('Y/m/d');
         $timestamp_2 = date('H:i:s');
 
-        $secret = 'secret'; 
+        $secret = 'Anagla3'; 
         $id_hash = hash_hmac("sha1", $form->bbs . $timestamp_1 . substr($ip, 0, 8), $secret);
         $id_base64 = base64_encode($id_hash);
         $id =  substr($id_base64, 0, 8);
@@ -272,6 +301,10 @@ class FiveChController extends Controller
         $w = date('w');
 
         $comment->id = $id;
+
+        if(Auth::check()) {
+            $comment->user_id = Auth::user()->user_id;
+        }
 
         $comment->time = $timestamp_1 . ' (' . $week[$w] . ') ' . $timestamp_2;
 
