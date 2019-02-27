@@ -2,6 +2,7 @@
 <html lang="ja">
     <head>
     <meta charset="UTF-8">
+    @php $epoch_time = time(); @endphp
     <title>ツガレコミン</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,98 +63,36 @@
 
         <div class="container fluid">
         <div class="row">
-        <div class="col-12 col-md-3">
 
-        <div class="card">
-            <div class="card-header">管理人のブログ</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>管理人のブログのURLです。</p>
-                <p><a href="https://www.tsugareco.net/">https://www.tsugareco.net/</a></p>
-                </div>
-            </div>
+        <div class="col-12 col-md-6">
+        @foreach($thread_datas as $thread_data)
+        <div class="card" id="{{$thread_data->thread_key}}">
+        <div class="card-header">
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
         </div>
-
-        <div class="card">
-            <div class="card-header">管理人のTwitter</div>
-            <div class="card-body">
-                <div class="card-text">
-                <a class="twitter-timeline" data-height="500" href="https://twitter.com/tsugarii"></a>
-                <script async="async" src="//platform.twitter.com/widgets.js" charset="utf-8" ></script>
-                </div>
-            </div>
+        <div class="card-body">
+            <h4 class="card-title"><a href="../../../r/{{$thread_data->board_key}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
         </div>
-
+        <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
+        </div>
+        @endforeach
+        {{$thread_datas->links()}}
         </div>
         <div class="col-12 col-md-6">
-
-        <div class="card">
-            <div class="card-header">ツガレコミンへようこそ</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>ツガレコミンは雑談やニュースを語り合う掲示板です。</p>
-                </div>
-            </div>
+        @foreach($reses as $res)
+        <div class="card" id="{{$res->comment_key}}">
+          <div class="card-header">{{$res->res_number}} 名前:{{$res->name}} Posted by <a href="../../../user/{{$res->user_id}}">u/{{$res->user_id}}</a> </div>
+          <div class="card-body">
+          <p class="card-text">{!!$res->message!!}</p>
+          </div>
+          <div class="card-footer">
+          投稿日:{{$res->time}} <a href="id/{{$res->id}}" name="{{$res->id}}">ID</a>:{{$res->id}}
+          </div>
+        </div>
+        @endforeach
+        {{$reses->links()}}
         </div>
 
-        <img src="tsugarecologo.png" class="img-fluid" alt="ツガレコミンロゴ画像">
-
-        <div class="card">
-        <div class="card-header"><a href="r/min">ツガレコミン</a></div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>雑談を中心とした自由な掲示板です。</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card">
-        <div class="card-header"><a href="r/nnp">ニュー速ノーモラル嫌儲</a></div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>ニュース専用の掲示板です。<br />スレ立てにはアカウント登録が必須です。</p>
-                </div>
-            </div>
-        </div>
-
-        </div>
-
-        <div class="col-12 col-md-3">
-        <div class="row">
-        <div class="col-12">
-        <div class="card">
-            <div class="card-header">NEWS</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>・ツガレコミンVer.1.00リリース</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">削除依頼</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>スレッド、レスの削除依頼は<br />こちらへどうぞ。</p>
-                <p><a href="https://www.tsugareco.net/p/blog-page_23.html">削除依頼URLページ</a></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">5ch専用ブラウザで登録する方法</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>5ch専用ブラウザに登録する方法。</p>
-                <p><a href="https://www.tsugareco.net/p/blog-page_62.html">登録方法URLページ</a></p>
-                </div>
-            </div>
-        </div>
-
-        </div>
-        </div>
-
-        </div>
         </div>
         </div>
     </body>

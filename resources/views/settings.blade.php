@@ -2,6 +2,7 @@
 <html lang="ja">
     <head>
     <meta charset="UTF-8">
+    @php $epoch_time = time(); @endphp
     <title>ツガレコミン</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -59,102 +60,36 @@
                 </div>
             </div>
         </nav>
-
+        @if(Auth::check())
         <div class="container fluid">
         <div class="row">
-        <div class="col-12 col-md-3">
 
-        <div class="card">
-            <div class="card-header">管理人のブログ</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>管理人のブログのURLです。</p>
-                <p><a href="https://www.tsugareco.net/">https://www.tsugareco.net/</a></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">管理人のTwitter</div>
-            <div class="card-body">
-                <div class="card-text">
-                <a class="twitter-timeline" data-height="500" href="https://twitter.com/tsugarii"></a>
-                <script async="async" src="//platform.twitter.com/widgets.js" charset="utf-8" ></script>
-                </div>
-            </div>
-        </div>
-
-        </div>
+        <div class="col-12 col-md-3"></div>
         <div class="col-12 col-md-6">
-
         <div class="card">
-            <div class="card-header">ツガレコミンへようこそ</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>ツガレコミンは雑談やニュースを語り合う掲示板です。</p>
-                </div>
-            </div>
+        <div class="card-header">User Settings</div>
+        <div class="card-body">
+        <div class="card-text">
+        <p>あなたの名前は「{{Auth::user()->name}}」です。</p>
+        <p>変更する場合は以下のフォームに入力してください。</p>
+        @if($errors->has('name'))
+            <p>エラー: {{$errors->first('name')}}</p>
+        @endif
+        <form method="post" action="settings/update" class="form-inline">
+        <div class="form-group">
+        <label for="name">名前:</label>
+        <input type="text" class="form-control" name="name" value="{{Auth::user()->name}}">
+        <button type="submit" class="btn btn-primary">変更</button>
         </div>
-
-        <img src="tsugarecologo.png" class="img-fluid" alt="ツガレコミンロゴ画像">
-
-        <div class="card">
-        <div class="card-header"><a href="r/min">ツガレコミン</a></div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>雑談を中心とした自由な掲示板です。</p>
-                </div>
-            </div>
-        </div>
-        
-        <div class="card">
-        <div class="card-header"><a href="r/nnp">ニュー速ノーモラル嫌儲</a></div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>ニュース専用の掲示板です。<br />スレ立てにはアカウント登録が必須です。</p>
-                </div>
-            </div>
-        </div>
-
-        </div>
-
-        <div class="col-12 col-md-3">
-        <div class="row">
-        <div class="col-12">
-        <div class="card">
-            <div class="card-header">NEWS</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>・ツガレコミンVer.1.00リリース</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">削除依頼</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>スレッド、レスの削除依頼は<br />こちらへどうぞ。</p>
-                <p><a href="https://www.tsugareco.net/p/blog-page_23.html">削除依頼URLページ</a></p>
-                </div>
-            </div>
-        </div>
-
-        <div class="card">
-            <div class="card-header">5ch専用ブラウザで登録する方法</div>
-            <div class="card-body">
-                <div class="card-text">
-                <p>5ch専用ブラウザに登録する方法。</p>
-                <p><a href="https://www.tsugareco.net/p/blog-page_62.html">登録方法URLページ</a></p>
-                </div>
-            </div>
-        </div>
-
-        </div>
-        </div>
+        </form>
 
         </div>
         </div>
         </div>
+        <div class="col-12 col-md-3"></div>
+
+        </div>
+        </div>
+        @endif
     </body>
 </html>
