@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 
 use App\thread;
 use App\comment;
+use App\user_infomation;
 
 class TsugarecominController extends Controller
 {
@@ -164,12 +165,15 @@ class TsugarecominController extends Controller
             if(preg_match('/^[A-Za-z0-9]{6}$/', $thread_key) == 1) {
                 if(Auth::check()) {
                     $thread = new thread;
+                    $user_infomation = new user_infomation;
 
                     if(Cache::has('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_upvoted')) {
                         if($thread::where('board_key', $board_key)->where('thread_key', $thread_key)->exists()){
 
+                            $user_id =  $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->value('user_id');
                             $upvote = $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->value('upvote');
 
+                            $user_infomation::where('user_id', $user_id)->update(['upvoted' => $upvote-1]);
                             $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->update(['upvote' => $upvote-1]);
 
                             Cache::forget('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_upvoted');
@@ -184,8 +188,10 @@ class TsugarecominController extends Controller
                             
                             Cache::forever('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_upvoted', 1);
 
+                            $user_id =  $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->value('user_id');
                             $upvote = $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->value('upvote');
 
+                            $user_infomation::where('user_id', $user_id)->update(['upvoted' => $upvote+1]);
                             $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->update(['upvote' => $upvote+1]);
 
                             return redirect('../../r/' . $board_key . '/#' . $thread_key);
@@ -208,12 +214,15 @@ class TsugarecominController extends Controller
                 if(preg_match('/^[a-zA-Z0-9]{7}$/', $comment_key) == 1) {
                     if(Auth::check()) {
                         $comment = new comment;
+                        $user_infomation = new user_infomation;
 
                         if(Cache::has('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_' . $comment_key . '_liked')){
                             if($comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->exists()) {
 
+                                $user_id = $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->value('user_id');
                                 $liked = $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->value('liked');
 
+                                $user_infomation::where('user_id', $user_id)->update(['liked' => $liked-1]);
                                 $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->update(['liked' => $liked-1]);
 
                                 Cache::forget('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_' . $comment_key . '_liked');
@@ -227,8 +236,10 @@ class TsugarecominController extends Controller
 
                                 Cache::forever('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_' . $comment_key . '_liked',1);
 
+                                $user_id = $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->value('user_id');
                                 $liked = $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->value('liked');
 
+                                $user_infomation::where('user_id', $user_id)->update(['liked' => $liked+1]);
                                 $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->update(['liked' => $liked+1]);
 
                                 return redirect('../../r/' . $board_key . '/' . $thread_key . '/#' . $comment_key);

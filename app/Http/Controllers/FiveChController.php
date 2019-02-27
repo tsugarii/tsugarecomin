@@ -11,6 +11,7 @@ use App\Http\Requests\FiveChRequest;
 
 use App\thread;
 use App\comment;
+use App\user_infomation;
 
 class FiveChController extends Controller
 {
@@ -73,8 +74,8 @@ class FiveChController extends Controller
 
         $thread = new thread;
         $comment = new comment;
-        
         $user = Auth::user();
+        $user_infomation = new user_infomation;
 
         $ip = $request->server('REMOTE_ADDR');
 
@@ -88,6 +89,16 @@ class FiveChController extends Controller
         $br_count = mb_substr_count($form->MESSAGE, "\n");
         if($br_count > 20) {
             return "ERROR:Too much new line!!";
+        }
+
+        //ユーザーのインフォメーション情報の登録
+        if(Auth::check()) {
+            if(!$user_infomation::where('user_id', Auth::user()->user_id)->exists()) {
+                $user_infomation->user_id =  Auth::user()->user_id;
+                $user_infomation->created_at = time();
+                $user_infomation->updated_at = time();
+                $user_infomation->save();
+            }
         }
 
         //トリップの処理をする。
@@ -292,7 +303,7 @@ class FiveChController extends Controller
         $timestamp_1 = date('Y/m/d');
         $timestamp_2 = date('H:i:s');
 
-        $secret = 'Anagla3'; 
+        $secret = 'secret'; 
         $id_hash = hash_hmac("sha1", $form->bbs . $timestamp_1 . substr($ip, 0, 8), $secret);
         $id_base64 = base64_encode($id_hash);
         $id =  substr($id_base64, 0, 8);
