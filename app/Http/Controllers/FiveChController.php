@@ -147,7 +147,7 @@ class FiveChController extends Controller
             $this->thread_save($thread,$thread_key,$form);
 
             //コメントmysqlに保存。
-            $this->comment_save($comment,$thread_key,$comment_key,1,$form,$board_info->default_name,$ip);
+            $this->comment_save($comment,$thread_key,$comment_key,1,$form,$board_info->default_name,$trip_key,$ip);
 
             // スレッドをsubject.txtに書き足す
             $this->subject_txt_save($thread,$form);
@@ -221,7 +221,7 @@ class FiveChController extends Controller
             $res_count++;
 
             //コメントmysqlに保存。
-            $this->comment_save($comment,$thread_key,$comment_key,$res_count,$form,$board_info->default_name,$ip);
+            $this->comment_save($comment,$thread_key,$comment_key,$res_count,$form,$board_info->default_name,$trip_key,$ip);
 
             //レス番号を引いておく。
             $res_count--;
@@ -272,7 +272,7 @@ class FiveChController extends Controller
         return $res_count;
     }
 
-    private function comment_save($comment,$thread_key,$comment_key,$res_number,$form,$default_name,$ip) {
+    private function comment_save($comment,$thread_key,$comment_key,$res_number,$form,$default_name,$trip_key,$ip) {
 
         $comment->board_key = $form->bbs;
         $comment->thread_key = $thread_key;
@@ -280,7 +280,11 @@ class FiveChController extends Controller
         $comment->res_number = $res_number;
 
         if($form->FROM != NULL) {
-            $comment->name = $form->FROM;
+            if($trip_key != '') {
+                $comment->name = $form->FROM . '◆' . $trip_key;
+            } else {
+                $comment->name = $form->FROM;
+            }
         }else {
             $comment->name = $default_name;
             $form->FROM = $default_name;
