@@ -65,6 +65,11 @@
         <div class="row">
 
         <div class="col-12 col-md-6">
+        <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Upvote:{{$upvoted}}</h4>
+        </div>
+        </div>
         @foreach($thread_datas as $thread_data)
         <div class="card" id="{{$thread_data->thread_key}}">
         <div class="card-header">
@@ -79,6 +84,11 @@
         {{$thread_datas->links()}}
         </div>
         <div class="col-12 col-md-6">
+        <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">いいね:{{$liked}}</h4>
+        </div>
+        </div>
         @foreach($reses as $res)
         <div class="card" id="{{$res->comment_key}}">
           <div class="card-header">{{$res->res_number}} 名前:{{$res->name}} Posted by <a href="../../../user/{{$res->user_id}}">u/{{$res->user_id}}</a> </div>
