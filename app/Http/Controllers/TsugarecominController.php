@@ -167,16 +167,14 @@ class TsugarecominController extends Controller
 
                     if(Cache::has('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_upvoted')) {
                         if($thread::where('board_key', $board_key)->where('thread_key', $thread_key)->exists()){
-                            $user = $request->user();
+
                             $upvote = $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->value('upvote');
 
-                            $user->upvoted = $upvote - 1;
-                            $user->save();
                             $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->update(['upvote' => $upvote-1]);
 
                             Cache::forget('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_upvoted');
 
-                            return redirect('../../r/' . $board_key . '#' . $thread_key);
+                            return redirect('../../r/' . $board_key . '/#' . $thread_key);
                         }else {
                             return "該当するスレッドが見つかりません。";
                         }
@@ -186,14 +184,11 @@ class TsugarecominController extends Controller
                             
                             Cache::forever('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_upvoted', 1);
 
-                            $user = $request->user();
                             $upvote = $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->value('upvote');
 
-                            $user->upvoted = $upvote + 1;
-                            $user->save();
                             $thread::where('board_key', $board_key)->where('thread_key', $thread_key)->update(['upvote' => $upvote+1]);
 
-                            return redirect('../../r/' . $board_key . '#' . $thread_key);
+                            return redirect('../../r/' . $board_key . '/#' . $thread_key);
                         } else {
                             return "該当するスレッドが見つかりません。";
                         }
@@ -217,17 +212,13 @@ class TsugarecominController extends Controller
                         if(Cache::has('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_' . $comment_key . '_liked')){
                             if($comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->exists()) {
 
-                                $user = $request->user();
                                 $liked = $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->value('liked');
 
-                                $user->liked = $liked - 1;
-                                $user->save();
                                 $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->update(['liked' => $liked-1]);
-
 
                                 Cache::forget('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_' . $comment_key . '_liked');
 
-                                return redirect('../../r/' . $board_key . '/' . $thread_key . '#' . $comment_key);
+                                return redirect('../../r/' . $board_key . '/' . $thread_key . '/#' . $comment_key);
                             } else {
                                 return "該当するレスが見つかりません。";
                             }
@@ -236,14 +227,11 @@ class TsugarecominController extends Controller
 
                                 Cache::forever('_' . Auth::user()->user_id . '_' . $board_key . '_' . $thread_key . '_' . $comment_key . '_liked',1);
 
-                                $user = $request->user();
                                 $liked = $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->value('liked');
 
-                                $user->liked = $liked + 1;
-                                $user->save();
                                 $comment::where('board_key', $board_key)->where('thread_key', $thread_key)->where('comment_key', $comment_key)->update(['liked' => $liked+1]);
 
-                                return redirect('../../r/' . $board_key . '/' . $thread_key . '#' . $comment_key);
+                                return redirect('../../r/' . $board_key . '/' . $thread_key . '/#' . $comment_key);
                             } else {
                                 return "該当するレスが見つかりません。";
                             }
