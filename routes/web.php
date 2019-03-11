@@ -23,8 +23,6 @@ Route::get('test/bbs.cgi', 'FiveChController@write_ready');
 Route::post('test/bbs.cgi', 'FiveChController@write')
 ->middleware(FiveChMiddleware::class);
 
-Route::get('/min', 'FiveChController@index');
-
 //JSON
 
 //板のデータをJSONで返す
@@ -54,7 +52,7 @@ Route::get('r/{board_key}/top/', 'TsugarecominController@board_read_top');
 Route::post('upvote/{board_key}/{thread_key}', 'TsugarecominController@thread_upvote');
 
 //スレッドを開いた場合
-Route::get('r/{board_key}/{thread_key}', 'TsugarecominController@thread_read')
+Route::get('r/{board_key}/{thread_key}/all', 'TsugarecominController@thread_read')
 ->middleware(ResponseMiddleware::class);
 Route::get('r/{board_key}/{thread_key}/{res_select}', 'TsugarecominController@res_read')
 ->middleware(ResponseMiddleware::class);
