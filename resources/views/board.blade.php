@@ -134,10 +134,10 @@
                 </form>
             </div>
             @endif
-            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a></p>
             </div>
             <div class="card-body">
-                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
+                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/all">{!!$thread_data->title!!}</a></h4>
             </div>
             <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
         </div>
@@ -159,10 +159,10 @@
                 </form>
             </div>
             @endif
-            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a></p>
             </div>
             <div class="card-body">
-                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
+                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/all">{!!$thread_data->title!!}</a></h4>
             </div>
             <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
         </div>
@@ -184,10 +184,10 @@
                 </form>
             </div>
             @endif
-            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a></p>
             </div>
             <div class="card-body">
-                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
+                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/all">{!!$thread_data->title!!}</a></h4>
             </div>
             <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
         </div>
@@ -209,10 +209,10 @@
                 </form>
             </div>
             @endif
-            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a></p>
             </div>
             <div class="card-body">
-                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
+                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/all">{!!$thread_data->title!!}</a></h4>
             </div>
             <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
         </div>
@@ -234,10 +234,10 @@
                 </form>
             </div>
             @endif
-            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a></p>
             </div>
             <div class="card-body">
-                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
+                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/all">{!!$thread_data->title!!}</a></h4>
             </div>
             <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
         </div>
@@ -259,10 +259,10 @@
                 </form>
             </div>
             @endif
-            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a></p>
             </div>
             <div class="card-body">
-                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
+                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/all">{!!$thread_data->title!!}</a></h4>
             </div>
             <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
         </div>
@@ -285,10 +285,10 @@
             <button type="button" class="btn btn-secondary floart-left" id="upvoted-btn-{{$thread_data->thread_key}}">Upvote <span class="badge badge-light" id="upvoted-{{$thread_data->thread_key}}">{{$thread_data->upvote}}</span></button>
             @endif
             @endif
-            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a> {{$thread_data->created_at}}</p>
+            <p class="float-right">Posted by <a href="../../user/{{$thread_data->user_id}}">u/{{$thread_data->user_id}}</a></p>
             </div>
             <div class="card-body">
-                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/">{!!$thread_data->title!!}</a></h4>
+                <h4 class="card-title"><a href="../../../r/{{$board_info->board_url}}/{{$thread_data->thread_key}}/all">{!!$thread_data->title!!}</a></h4>
             </div>
             <div class="card-footer"><p>{{$thread_data->res}} コメント 勢い:{{(int)($thread_data->res / (($epoch_time - $thread_data->time)/60) * 60 * 24)}} 最終更新:{{$thread_data->updated_at}}</p></div>
         </div>
