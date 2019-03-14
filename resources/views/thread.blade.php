@@ -159,7 +159,7 @@
 
         @endforeach
 
-        <form method="POST" action="../../../test/bbs.cgi">
+        <form method="POST" action="../../../../test/bbs.cgi">
           <input type="hidden" name="bbs" value="{{$board_info->board_url}}">
           <input type="hidden" name="key" value="{{$key}}">
           <div class="form-row">
@@ -188,7 +188,7 @@
         <div class="col-12 col-md-5">
 
         <div class="card">
-        <div class="card-header"><h1><a href="../../../r/{{$board_info->board_url}}">{{$board_info->board_name}}</a></h1></div>
+        <div class="card-header"><h1><a href="../../../../r/{{$board_info->board_url}}">{{$board_info->board_name}}</a></h1></div>
         <div class="card-body"><p>{!!$board_info->board_explain!!}</p></div>
 
         <div class="card">
