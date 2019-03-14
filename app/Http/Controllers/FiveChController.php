@@ -37,7 +37,7 @@ class FiveChController extends Controller
                 $thread = new thread;
                 if($thread::where('time', $thread_key)->exists()) {
                     $thread_key = $thread::where('time', $thread_key)->value('thread_key');
-                    return redirect('r/' . $board_key. '/' . $thread_key);
+                    return redirect('r/' . $board_key. '/' . $thread_key . '/all');
                 } else {
                     return "指定されたスレッドは存在しません。";
                 }
@@ -55,7 +55,15 @@ class FiveChController extends Controller
                     if($thread::where('time', $thread_key)->exists()) {
                         $thread_key = $thread::where('time', $thread_key)->value('thread_key');
                         return redirect('r/' . $board_key. '/' . $thread_key . '/' . $res_number);
-                    }else {
+                    } else {
+                        return "スレッドが見つかりません。";
+                    }
+                } else if(preg_match('/^l50$/', $res_number) == 1) {
+                    $thread = new thread;
+                    if($thread::where('time', $thread_key)->exists()) {
+                        $thread_key = $thread::where('time', $thread_key)->value('thread_key');
+                        return redirect('r/' . $board_key. '/' . $thread_key . '/all');
+                    } else {
                         return "スレッドが見つかりません。";
                     }
                 } else {
@@ -161,9 +169,9 @@ class FiveChController extends Controller
                 (preg_match('/Firefox/i', $agent) === 0) &&
                 (preg_match('/Safari/i', $agent) === 0))
             {
-                return mb_convert_encoding("書き込み完了！", 'SJIS-win', 'utf-8');
+                return "書き込み完了！";
             } else {
-                return redirect('../r/' . $form->bbs . '/' . $thread_key . '/#' . $comment_key);
+                return redirect('../r/' . $form->bbs . '/' . $thread_key . '/all');
             }
             
         //コメントの場合。
@@ -239,10 +247,10 @@ class FiveChController extends Controller
                 (preg_match('/Firefox/i', $agent) === 0) &&
                 (preg_match('/Safari/i', $agent) === 0))
             {
-                return mb_convert_encoding("書き込み完了！", 'SJIS-win', 'utf-8');
+                return "書き込み完了！";
                 
             } else {
-                return redirect('../r/' . $form->bbs . '/' . $thread_key . '/#' . $comment_key);
+                return redirect('../r/' . $form->bbs . '/' . $thread_key . '/all#' . $comment_key);
             }
 
         }else {

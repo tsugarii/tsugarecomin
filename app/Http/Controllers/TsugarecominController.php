@@ -64,7 +64,7 @@ class TsugarecominController extends Controller
                     ->where('sticky', 0)->where('deleted', 0)
                     ->where('time', '<', (time() - 86400))
                     ->orderby('upvote', 'desc')
-                    ->simplePaginate(10);
+                    ->simplePaginate(30);
 
                     cache::put('_sticky_' . $board_key, $sticky_thread_datas, now()->addSeconds(3));
                     cache::put('_3times_' . $board_key, $thread_datas_3times, now()->addSeconds(3));
@@ -110,7 +110,7 @@ class TsugarecominController extends Controller
                     $thread_datas = $thread::where('board_key', $board_key)
                     ->where('sticky', 0)->where('deleted', 0)
                     ->orderby('time', 'desc')
-                    ->simplePaginate(10);
+                    ->simplePaginate(30);
 
                     cache::put('_sticky_' . $board_key, $sticky_thread_datas, now()->addSeconds(3));
                     cache::put('_' . $board_key . '_new', $thread_datas, now()->addSeconds(3));
@@ -146,7 +146,7 @@ class TsugarecominController extends Controller
                     $thread_datas = $thread::where('board_key', $board_key)
                     ->where('sticky', 0)->where('deleted', 0)
                     ->orderby('upvote', 'desc')
-                    ->simplePaginate(10);
+                    ->simplePaginate(30);
 
                     cache::put('_sticky_' . $board_key, $sticky_thread_datas, now()->addSeconds(3));
                     cache::put('_' . $board_key . '_top', $thread_datas, now()->addSeconds(3));
@@ -364,6 +364,21 @@ class TsugarecominController extends Controller
                 }
             }
         }
+    }
+
+    public function thread_all_translation($board_key,$thread_key) {
+        if(preg_match('/^min$|^nnp$/', $board_key) == 1) {
+            if(preg_match('/^[A-Za-z0-9]{6}$/',$thread_key) == 1) {
+                $thread = new thread;
+                if($thread::where('thread_key', $thread_key)->exists()) {
+                    return redirect('r/' . $board_key. '/' . $thread_key . '/all');
+                } else {
+                     return "指定されたスレッドは存在しません。";
+                }
+            }
+            return "指定された板は存在しません。";
+        }
+        return "スレッドキーがおかしいです。";
     }
     
     public function thread_id_read($board_key,$thread_key,$id) {
